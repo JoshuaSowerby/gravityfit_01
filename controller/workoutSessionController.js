@@ -7,8 +7,34 @@ exports.getWorkoutSessions = async (req,res) =>{
   const userId=req.user.userId;
   const workoutSessions = await WorkoutSession.find({ userId }).sort({ startTime: -1 });
   res.status(200).json(workoutSessions);
-
 };
+
+exports.postWorkoutSession = async (req,res) =>{
+  const userId=req.user.userId;
+  const {exerciseId,
+    difficulty,
+    startTime,
+    endTime,
+    totalReps,
+    totalScore} = req.body;
+  try {
+    const session = new WorkoutSession({
+      userId,
+      exerciseId,
+      difficulty,
+      startTime,
+      endTime,
+      totalReps,
+      totalScore
+    });
+    await session.save();
+    res.status(200).json({message:'success'});
+    
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+  
+}
 /**
  * Starts a new workout session
  * @route POST /api/session/start

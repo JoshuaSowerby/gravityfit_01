@@ -8,22 +8,25 @@ const {
   updateUserProfile,
   addFavoriteWorkout,
   getFavoriteWorkouts,
-  removeFavoriteWorkout
+  removeFavoriteWorkout,
+  getProfile
 } = require('../controller/profileController');
 
 // 📥 Update profile
-router.put('/:userId', updateUserProfile);
+router.put('/', verifyToken, updateUserProfile);
 
 // 📊 Get user workout history
-router.get('/:userId/history', getUserHistory);
+router.get('/history', verifyToken, getUserHistory);
 
 // ⭐ Add to favorites
-router.post('/:userId/favorites', addFavoriteWorkout);
+router.post('/favorites', verifyToken, addFavoriteWorkout);
 
 // ⭐ Get favorites
-router.get('/:userId/favorites', getFavoriteWorkouts);
+router.get('/favorites', verifyToken, getFavoriteWorkouts);
 
 // DELETE Favorites
-router.delete('/:userId/favorites/:workoutId', removeFavoriteWorkout);
+router.delete('/favorites/:workoutId', verifyToken, removeFavoriteWorkout);
+
+router.get('/', verifyToken, getProfile)
 
 module.exports = router; // ✅ Export the router

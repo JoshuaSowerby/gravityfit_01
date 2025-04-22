@@ -9,6 +9,7 @@ const leaderboardRoutes = require('./routers/leaderboardRoutes');
 const sessionRoutes = require('./routers/workoutSessionRoutes');
 const profileRoutes = require('./routers/profileRoutes');
 const analyticsRoutes = require('./routers/analyticsRoutes');
+const syncRoutes = require('./routers/syncRoutes');
 
 const mocksessionRoutes = require('./routers/sessionRoutes'); //testing purpose only
 
@@ -24,7 +25,7 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/session', sessionRoutes);
 app.use('/api/profile', profileRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/sync', syncRoutes);
 app.use('/api/session', mocksessionRoutes); // ✅ Enable all session routes ** temporary
-
 
 module.exports = app;

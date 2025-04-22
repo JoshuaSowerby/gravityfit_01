@@ -3,12 +3,23 @@ const WorkoutSession = require('../model/WorkoutSession');
 const User = require('../model/User');
 const Workout = require('../model/Workout');
 
+
+exports.getProfile = async (req,res) => {
+  const userId = req.user.userId
+  try {
+    const profile = await Profile.findOne({userId});
+    res.status(200).json(profile);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
 /**
  * GET /api/profile/:userId/history
  * Returns workout session history and user stats
  */
 exports.getUserHistory = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userId;
 
   try {
     const user = await User.findById(userId);
@@ -56,7 +67,7 @@ exports.getUserHistory = async (req, res) => {
  * Updates bio, age, or profile image
  */
 exports.updateUserProfile = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userId;
   const { bio, age, imageUrl } = req.body;
 
   try {
@@ -82,7 +93,7 @@ exports.updateUserProfile = async (req, res) => {
 
 // ⭐ Add workout to favorites
 exports.addFavoriteWorkout = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userId;
   const { workoutId } = req.body;
 
   try {
@@ -104,7 +115,7 @@ exports.addFavoriteWorkout = async (req, res) => {
 
 // 📤 Get user's favorite workouts
 exports.getFavoriteWorkouts = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userId;
 
   try {
     const user = await User.findById(userId).populate('favorites');
@@ -121,7 +132,8 @@ exports.getFavoriteWorkouts = async (req, res) => {
  * @route DELETE /api/profile/:userId/favorites/:workoutId
  */
 exports.removeFavoriteWorkout = async (req, res) => {
-  const { userId, workoutId } = req.params;
+  const userId = req.user.userId;
+  const workoutId =req.params;
 
   try {
     const user = await User.findById(userId);

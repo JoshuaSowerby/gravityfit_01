@@ -1,13 +1,22 @@
 const WorkoutSession = require('../model/WorkoutSession');
 const SensorEvent = require('../model/SensorEvent');
 
+
+//should add querying to this
+exports.getWorkoutSessions = async (req,res) =>{
+  const userId=req.user.userId;
+  const workoutSessions = await WorkoutSession.find({ userId }).sort({ startTime: -1 });
+  res.status(200).json(workoutSessions);
+
+};
 /**
  * Starts a new workout session
  * @route POST /api/session/start
- * @body { userId, exerciseId, difficulty }
+ * @body { exerciseId, difficulty }
  */
 exports.startSession = async (req, res) => {
-  const { userId, exerciseId, difficulty = 'medium' } = req.body;
+  const { exerciseId, difficulty = 'medium' } = req.body;
+  const userId=req.user.userId;
 
   try {
     const session = new WorkoutSession({
@@ -46,7 +55,7 @@ exports.endSession = async (req, res) => {
 
     // 1. Get all valid sensor events for this session
     const events = await SensorEvent.find({
-      userId: session.userId,
+      userId: req.user.userId,
       exerciseId: session.exerciseId,
       isRep: true,
       timestamp: { $gte: session.startTime, $lte: endTime }

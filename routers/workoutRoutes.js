@@ -1,24 +1,12 @@
 const express = require('express');
 const router = express.Router(); // ✅ DEFINE THIS FIRST
 
-const {
-    getUserHistory,
-    updateUserProfile,
-    addFavoriteWorkout,
-    getFavoriteWorkouts
-  } = require('../controller/profileController');
 
-  // Add to favorites
-  router.post('/:userId/favorites', addFavoriteWorkout);
-  
-  // Get all favorites
-  router.get('/:userId/favorites', getFavoriteWorkouts);
-  
-  
-    // Add to favorites
-    router.post('/:userId/favorites', addFavoriteWorkout);
+const { getAllWorkouts } = require('../controller/workoutController');
+const { verifyToken } = require('../middleware/authMiddleware');
 
-    // Get all favorites
-    router.get('/:userId/favorites', getFavoriteWorkouts);
+
+// Get all workouts
+router.get('/workouts', getAllWorkouts);
 
 module.exports = router;

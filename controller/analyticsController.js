@@ -19,9 +19,9 @@ const getStartDate = (range) => {
   };
   
 
-// 📊 GET /api/analytics/:userId?range=daily|weekly|monthly
+// 📊 GET /api/analytics/?range=daily|weekly|monthly
 exports.getWorkoutAnalytics = async (req, res) => {
-  const { userId } = req.params;
+  const userId = req.user.userId;
   const { range } = req.query;
 
   if (!['daily', 'weekly', 'monthly'].includes(range)) {

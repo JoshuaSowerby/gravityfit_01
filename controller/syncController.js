@@ -31,9 +31,11 @@ exports.getRemote = async (req, res) =>{
 // api/sync/local/:tablename
 //does successfully insert
 exports.sendLocal = async (req, res) =>{
+    //we assume that body will be in format [{id, field1, ...}, ...]
     const userId=req.user.userId;
     const tablename=req.params.tablename;
-    let body=req.body;
+    const sqlite_id=req.body.map(item=>item.id)//just get id
+    let body=req.body.map(({id, ...rest})=>rest);//remove id
     for (item of body){
         item.userId= new mongoose.Types.ObjectId(userId);//or is it just userId?
     }
@@ -41,8 +43,14 @@ exports.sendLocal = async (req, res) =>{
     try {
         //add userId...
 
-        result=await Model.insertMany(body);//body must be [ {}, ...]
-        res.status(200).json({message:'insert success'});
+        const result=await Model.insertMany(body, {ordered:true});//body must be [ {}, ...]
+        count=0;
+        returnObj=[]
+        for (const item in result){
+            returnObj=[...returnObj, {id:body[count].id, mongo_id:item._id}, ]
+        }
+        //need to then get their mongo_id's
+        res.status(200).json({message:'insert success', mongo_ids:returnObj});
     } catch (error) {
         res.status(500).json({ message: error.message });
     };

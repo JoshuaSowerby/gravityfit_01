@@ -133,7 +133,7 @@ exports.getFavoriteWorkouts = async (req, res) => {
  */
 exports.removeFavoriteWorkout = async (req, res) => {
   const userId = req.user.userId;
-  const workoutId =req.params;
+  const workoutId =req.params.workoutId;
 
   try {
     const user = await User.findById(userId);
